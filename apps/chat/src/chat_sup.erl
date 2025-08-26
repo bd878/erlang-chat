@@ -27,7 +27,21 @@ start_link() ->
 
 init([]) ->
     ExtPort = 8080,
-    {ok, {#{strategy => one_for_all}, [get_cowboy_child_spec({0, 0, 0, 0}, ExtPort)]}}.
+    {ok, {#{strategy => one_for_all}, [get_cowboy_child_spec({0, 0, 0, 0}, ExtPort), #{
+        id       => server,
+        start    => {chat_server, start_link, []},
+        restart  => transient,
+        shutdown => infinity,
+        type     => worker,
+        modules  => [chat_server]},
+    #{
+        id       => bot,
+        start    => {bot_server, start_link, []},
+        restart  => permanent,
+        shutdown => infinity,
+        type     => worker,
+        modules  => [bot_server]}
+    ]}}.
 
 -spec get_cowboy_child_spec(ip(), cowboy_port()) ->
     supervisor:child_spec().

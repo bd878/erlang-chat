@@ -55,6 +55,10 @@ websocket_info({message, Message}, State) ->
     logger:alert("send message - ~p", [Message]),
     {reply, {text, encode({new_message, Message})}, State};
 
+websocket_info({clients, Clients}, State) ->
+    logger:alert("send clients - ~p", [Clients]),
+    {reply, {text, encode({clients_update, [list_to_bitstring(pid_to_list(Pid)) || Pid <- Clients]})}, State};
+
 websocket_info(Info, State) ->
     logger:alert("Get unexpected info - ~p", [Info]),
     {ok, State}.

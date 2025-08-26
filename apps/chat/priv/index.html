@@ -82,6 +82,9 @@
             case 'service_message':
               printError('service message data - ' + Result.data);
               break;
+            case 'clients_update':
+              showScreen('<span style="color: grey;">' + Result.data + '</span>');
+              break;
             case 'error':
               printError('error message data - ' + Result.data);
               break;

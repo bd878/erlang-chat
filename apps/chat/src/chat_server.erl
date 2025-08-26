@@ -25,13 +25,16 @@ start_link() ->
 init(_) ->
     {ok, #state{clients=[]}}.
 
-handle_call({add_client, Pid}, _, S = #state{clients=Clients}) ->
-    logger:alert("new client pid - ~p", [Pid]),
-    {reply, ok, S#state{clients=[Pid|Clients]}};
+handle_call({add_client, Me}, _, S = #state{clients=Clients}) ->
+    logger:alert("new client pid - ~p", [Me]),
+    NextClients = [Me|Clients],
+    [Pid ! {clients, NextClients} || Pid <- NextClients],
+    {reply, ok, S#state{clients=NextClients}};
 
-handle_call({remove_client, Pid}, _, S = #state{clients=Clients}) ->
-    logger:alert("client left - ~p", [Pid]),
-    NextClients = lists:delete(Pid, Clients),
+handle_call({remove_client, Me}, _, S = #state{clients=Clients}) ->
+    logger:alert("client left - ~p", [Me]),
+    NextClients = lists:delete(Me, Clients),
+    [Pid ! {clients, NextClients} || Pid <- NextClients],
     {reply, ok, S#state{clients=NextClients}};
 
 handle_call({send_message, {Me, Message}}, _, S = #state{clients=Clients}) ->

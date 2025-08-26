@@ -46,4 +46,4 @@ terminate(_, _) ->
     ok.
 
 stop() ->
-    gen_server:cast(chat_server, stop).
+    gen_server:cast(?SERVER, stop).

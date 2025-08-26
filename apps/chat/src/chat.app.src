@@ -10,7 +10,7 @@
     jsx
    ]},
   {env,[]},
-  {modules, [chat_app, chat_sup, web_handler, chat, chat_server]},
+  {modules, [chat_app, chat_sup, web_handler, chat, chat_server, bot_server]},
   {maintainers, []},
   {licenses, ["Apache 2.0"]},
   {links, []}
